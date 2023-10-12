@@ -3,7 +3,6 @@ package torii
 import (
 	"context"
 	"io"
-	"net/http"
 	"net/url"
 )
 
@@ -21,20 +20,34 @@ type (
 		Value string
 	}
 
+	// Head is a collection of headers.
+	Head []Header
+
 	// Response message.
 	Response struct {
-		Status  Status
-		Headers []Header
-		Cookies []http.Cookie
-		Body    io.ReadCloser
+		Status Status
+		Head   Head
+		Body   io.ReadCloser
 	}
 
 	// Request message.
 	Request struct {
-		Target  *url.URL
-		Method  Method
-		Headers []Header
-		Cookies []http.Cookie
-		Body    io.Reader
+		Target *url.URL
+		Method Method
+		Head   Head
+		Body   io.Reader
 	}
 )
+
+// Values returns all values set by the key.
+//
+// This method always returns a non-nil slice.
+func (h Head) Values(key string) []string {
+	var values []string
+	for _, header := range h {
+		if header.Key == key {
+			values = append(values, header.Value)
+		}
+	}
+	return values
+}
