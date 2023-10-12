@@ -37,15 +37,27 @@ func (h *handler) ServeHTTP(out http.ResponseWriter, in *http.Request) {
 		Request{
 			Method: (Method)(in.Method),
 			Target: in.URL,
-			Header: (Header)(in.Header),
-			Body:   in.Body,
+			Headers: (func() []Header {
+				var headers []Header
+				for key, values := range in.Header {
+					for _, value := range values {
+						headers = append(
+							headers,
+							Header{
+								Key:   key,
+								Value: value,
+							},
+						)
+					}
+				}
+				return headers
+			})(),
+			Body: in.Body,
 		},
 	)
-	if header := response.Header; header != nil {
-		for name, values := range header {
-			for _, value := range values {
-				out.Header().Add(name, value)
-			}
+	if headers := response.Headers; headers != nil {
+		for _, header := range headers {
+			out.Header().Add(header.Key, header.Value)
 		}
 	}
 	out.WriteHeader((int)(response.Status))

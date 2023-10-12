@@ -16,20 +16,25 @@ type Gate interface {
 
 type (
 	// Header of a message.
-	Header http.Header
+	Header struct {
+		Key   string
+		Value string
+	}
 
 	// Response message.
 	Response struct {
-		Status Status
-		Header Header
-		Body   io.ReadCloser
+		Status  Status
+		Headers []Header
+		Cookies []http.Cookie
+		Body    io.ReadCloser
 	}
 
 	// Request message.
 	Request struct {
-		Target *url.URL
-		Method Method
-		Header Header
-		Body   io.Reader
+		Target  *url.URL
+		Method  Method
+		Headers []Header
+		Cookies []http.Cookie
+		Body    io.Reader
 	}
 )
