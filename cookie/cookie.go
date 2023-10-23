@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/kerelape/option"
 	"github.com/kerelape/torii"
-	"github.com/kerelape/torii/internal/option"
 )
 
 // SameSitePolicy is cookie same-site policy.
