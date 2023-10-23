@@ -8,7 +8,6 @@ import (
 
 // Gate represents an endpoint.
 type Gate interface {
-
 	// Respond returns response for the request.
 	Respond(context.Context, Request) Response
 }
